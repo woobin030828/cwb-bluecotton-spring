@@ -10,4 +10,7 @@ public interface ShopService {
     // 샵 메인 페이지 전체 조회
     public List<ProductListResponseDTO> getProducts();
 
+    // 상품 키워드 검색 조회
+//    public ProductListResponseDTO getProductByProductName(String productName);
+
 }

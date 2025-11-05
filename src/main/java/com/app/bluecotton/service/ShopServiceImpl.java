@@ -19,4 +19,8 @@ public class ShopServiceImpl implements ShopService {
     public List<ProductListResponseDTO> getProducts() {
         return shopDAO.findAll();
     }
+
+
+
+
 }

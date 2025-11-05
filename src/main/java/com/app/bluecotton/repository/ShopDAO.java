@@ -18,4 +18,9 @@ public class ShopDAO {
         return shopMapper.selectAll();
     }
 
+    // 상품 키워드 검색 조회
+    public ProductListResponseDTO findByProductName(String productName) {
+        return shopMapper.selectByKeyword(productName);
+    }
+
 }
