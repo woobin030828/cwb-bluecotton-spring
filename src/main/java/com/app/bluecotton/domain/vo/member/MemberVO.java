@@ -39,7 +39,6 @@ public class MemberVO {
     {
         this.memberPicturePath = "/default";
         this.memberPictureName = "member.jpg";
-        this.memberAddress = "경기도 성남시 분당구 이매로 143번길 10";
         this.memberNickname = "임시닉네임";
         this.memberProvider = "local";
         this.memberRank = "rookie";
