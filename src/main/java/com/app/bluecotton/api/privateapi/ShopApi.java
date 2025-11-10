@@ -19,13 +19,26 @@ public class ShopApi {
 
     private final ShopService shopService;
 
-    // 상품 조건 조회
+    // 메인 페이지 상품 조건 조회
     @PostMapping("")
     public ResponseEntity<ApiResponseDTO> getProductsByFilter(@RequestBody Map<String, Object> filterParams) {
         log.info("상품 조건 조회 요청 들어옴: {}", filterParams);
         List<ProductListResponseDTO> products = shopService.getProductByFilter(filterParams);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseDTO.of("상품 조건 조회 성공", products));
     }
+
+    // 메인 페이지 상품 찜하기 추가
+    @PostMapping("like")
+    public ResponseEntity<ApiResponseDTO> likeProduct(@RequestParam Long memberId, @RequestParam Long productId) {
+        log.info("찜하기 추가 요청 들어옴:{}, {}", memberId, productId);
+        shopService.addLikeProduct(memberId, productId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseDTO.of("찜하기 추가 성공"));
+    }
+
+    // 메인 페이지 상품 찜하기 삭제
+
+
+
 
     // 상세 페이지 상단 조회
     @GetMapping("read/{id}")

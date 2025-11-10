@@ -20,8 +20,8 @@ public class ShopDAO {
     }
 
     // 메인 페이지 상품 찜하기 추가
-    public void addMyLikedProduct(){
-
+    public void insertMyLikedProduct(Long memberId, Long productId){
+         shopMapper.insertMyLikedProduct(memberId, productId);
     }
 
 

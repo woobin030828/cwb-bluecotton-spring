@@ -7,8 +7,11 @@ import java.util.Map;
 
 public interface ShopService {
 
-    // 상품 조건 조회
+    // 메인 페이지 상품 조건 조회
     public List<ProductListResponseDTO> getProductByFilter(Map<String,Object> filterParams);
+
+    // 메인 페이지 상품 찜하기 추가
+    public void addLikeProduct(Long memberId, Long productId);
 
     // 상세 페이지 상단 조회
     public ProductDetailResponseDTO getProductDetailHeader(Long id);

@@ -23,6 +23,11 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    public void addLikeProduct(Long memberId, Long productId) {
+        shopDAO.insertMyLikedProduct(memberId, productId);
+    }
+
+    @Override
     public ProductDetailResponseDTO getProductDetailHeader(Long id) {
         return shopDAO.findProductDetailHeader(id);
     }

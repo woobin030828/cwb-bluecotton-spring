@@ -16,6 +16,9 @@ public interface ShopMapper {
     // 메인 페이지 상품 찜하기 추가
     public void insertMyLikedProduct(@Param("memberId") Long memberId , @Param("productId") Long productId);
 
+    // 메인 페이지 상품 찜하기 삭제
+
+
     // 상세 페이지 상품 상단 조회
     public ProductDetailResponseDTO selectProductDetailHeader(Long id);
 
