@@ -82,6 +82,12 @@
             </when>
         </choose>
     </select>
+    
+<!-- 샵 메인 페이지 찜하기 추가 -->
+    <insert id="insertMyLikedProduct">
+        INSERT INTO TBL_PRODUCT_LIKE (MEMBER_ID, PRODUCT_ID)
+        VALUES (#{memberId}, #{productId})
+    </insert>
 
     <!--  상품 상세 페이지 상단 조회 -->
     <select id="selectProductDetailHeader" parameterType="Long" resultType="com.app.bluecotton.domain.dto.ProductDetailResponseDTO">

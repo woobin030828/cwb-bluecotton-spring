@@ -19,6 +19,12 @@ public class ShopDAO {
         return shopMapper.selectProductsByFilter(filterParams);
     }
 
+    // 메인 페이지 상품 찜하기 추가
+    public void addMyLikedProduct(){
+
+    }
+
+
     // 상세 페이지 상단 조회
     public ProductDetailResponseDTO findProductDetailHeader(Long id){
         return shopMapper.selectProductDetailHeader(id);
