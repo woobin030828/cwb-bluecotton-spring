@@ -64,4 +64,8 @@ public interface ShopMapper {
     public void insertMyReviewImage(MyPageReviewWriteDTO myPageReviewWriteDTO);
 
 
+    // 마이페이지 배송현황 전체 조회
+    public List<MyPageDeliveryListDTO> selectMyDeliveryList(@Param("memberId") Long memberId);
+
+
 }

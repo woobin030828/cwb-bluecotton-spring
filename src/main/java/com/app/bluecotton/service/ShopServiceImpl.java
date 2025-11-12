@@ -99,6 +99,11 @@ public class ShopServiceImpl implements ShopService {
         shopDAO.insertMyReviewImage(myPageReviewWriteDTO);
     }
 
+    @Override
+    public List<MyPageDeliveryListDTO> getMyDeliveryList(Long memberId) {
+        return shopDAO.findMyDeliveryList(memberId);
+    }
+
 
 }
 

@@ -380,7 +380,7 @@
     </insert>
 
     <!-- 마이페이지 배송현황 전체조회 -->
-    <select id="selectMyDeliveryStatus" parameterType="Long" resultType="com.app.bluecotton.domain.dto.MyPageDeliveryListDTO">
+    <select id="selectMyDeliveryList" parameterType="Long" resultType="com.app.bluecotton.domain.dto.MyPageDeliveryListDTO">
         SELECT
         TBO.ID AS ORDER_ID,
         TBD.ID AS DELIVERY_ID,
@@ -397,7 +397,7 @@
         JOIN TBL_PRODUCT  TBP
         ON TBP.ID = TBO.PRODUCT_ID
         JOIN TBL_DELIVERY TBD
-        ON TBP.ID = TBD.PRODUCT_ID
+        ON TBP.ID = TBD.PRODUCT_ID AND TBO.MEMBER_ID = TBD.MEMBER_ID
         WHERE TBO.MEMBER_ID = #{memberId}
         ORDER BY TBO.ORDER_CREATE_AT DESC
     </select>
