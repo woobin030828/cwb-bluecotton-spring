@@ -4,11 +4,13 @@ import com.app.bluecotton.domain.vo.chat.ChatVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface ChatMapper {
-    public void insert(ChatVO chatVO);
-    public ChatVO selectChatById(Long id);
-    public List<ChatVO> selectChatList();
-    public void delete(ChatVO chatVO);
+    public void insertChat(ChatVO chatVO);
+    public Optional<ChatVO> selectChatById(Long id);
+    public List<ChatVO> selectAll();
+    public void delete(Long id);
+    public List<ChatVO> selectChatListByMember(Long memberId);
 }

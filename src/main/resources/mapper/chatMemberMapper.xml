@@ -3,12 +3,12 @@
 <mapper namespace="com.app.bluecotton.mapper.ChatMemberMapper">
     <insert id="insertChatMember" parameterType="ChatMemberVO">
         INSERT INTO
-        TBL_CHAT_MEMBER
-        VALUES (SEQ_CHAT_MEMBER.NEXTVAL, #{chatId}, #{memberId});
+        TBL_CHAT_MEMBER(ID, CHAT_ID, MEMBER_ID, CHAT_MEMBER_ROLE, CHAT_MEMBER_STATUS)
+        VALUES (SEQ_CHAT_MEMBER.NEXTVAL, #{chatId}, #{memberId}, #{chatMemberRole}, #{chatMemberStatus});
     </insert>
 
-    <delete id="delete" parameterType="MyChatRoomCustomerVO">
-        DELETE FROM TBL_MY_CHAT_ROOM_CUSTOMER
+    <delete id="delete" parameterType="ChatMemberVO">
+        DELETE FROM TBL_CHAT_MEMBER
         WHERE MEMBER_ID = #{memberId} AND CHAT_ID = #{chatId}
     </delete>
 

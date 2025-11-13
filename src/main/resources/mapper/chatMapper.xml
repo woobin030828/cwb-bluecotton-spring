@@ -5,32 +5,70 @@
         <selectKey keyProperty="id" resultType="long" order="BEFORE">
             SELECT SEQ_CHAT.NEXTVAL FROM DUAL
         </selectKey>
-        INSERT INTO TBL_CHAT(ID, CHAT_TITLE, CHAT_STATUS)
-        VALUES(#{id}, #{chatTitle}, #{chatStatus})
+        INSERT INTO TBL_CHAT(ID, CHAT_TITLE, CHAT_TYPE, CHAT_OWNER_ID, CHAT_STATUS)
+        VALUES(#{id}, #{chatTitle}, #{chatType}, #{chatOwnerId}, #{chatStatus})
     </insert>
 
-    <select id="selectChatById" parameterType="Long" resultType="ChatVO">
-        SELECT TBC.ID, TBC.TBL_CHAT_TITLE, TBC.CHAT_STATUS, TBCM.CHAT_MEMBER_COUNT
+    <select id="selectAllJoinedByMemberId" parameterType="Long" resultType="ChatVO">
+        SELECT TBC.ID, TBC.CHAT_TITLE, TBC.CHAT_TYPE, TBC.CHAT_OWNER_ID, TBC.CHAT_STATUS, TBCM.CHAT_MEMBER_COUNT
         FROM TBL_CHAT TBC
         JOIN (
-            SELECT COUNT(ID) AS CHAT_MEMBER_COUNT
+            SELECT CHAT_ID, COUNT(ID) AS CHAT_MEMBER_COUNT
             FROM TBL_CHAT_MEMBER
+            GROUP BY CHAT_ID
         ) TBCM
         ON TBCM.CHAT_ID = TBC.ID
-        WHERE ID = #{id}
+        WHERE TBC.CHAT_OWNER_ID = #{memberId}
     </select>
+
+    <select id="selectChatById">
+        SELECT TBC.ID, TBC.CHAT_TITLE, TBC.CHAT_TYPE, TBC.CHAT_OWNER_ID, TBC.CHAT_STATUS, TBCM.CHAT_MEMBER_COUNT
+        FROM TBL_CHAT TBC
+        JOIN (
+        SELECT CHAT_ID, COUNT(ID) AS CHAT_MEMBER_COUNT
+        FROM TBL_CHAT_MEMBER
+        GROUP BY CHAT_ID
+        ) TBCM
+        ON TBCM.CHAT_ID = TBC.ID
+        WHERE TBC.ID = #{id}
+    </select>
+
+    <select id="selectChatListByMember" parameterType="Long" resultType="ChatVO">
+        SELECT TBC.ID, TBC.CHAT_TITLE, TBC.CHAT_TYPE, TBC.CHAT_OWNER_ID, TBC.CHAT_CREATED_AT, TBC.CHAT_STATUS,
+        NVL(TBCM.CHAT_MEMBER_COUNT, 0) AS CHAT_MEMBER_COUNT
+        FROM TBL_CHAT TBC
+        JOIN TBL_CHAT_MEMBER TCM
+        ON TCM.CHAT_ID = TBC.ID
+        AND TCM.MEMBER_ID = #{memberId}
+        LEFT JOIN (
+            SELECT CHAT_ID, COUNT(ID) AS CHAT_MEMBER_COUNT
+            FROM TBL_CHAT_MEMBER
+            GROUP BY CHAT_ID
+        ) TBCM
+        ON TBCM.CHAT_ID = TBC.ID
+    </select>
+
 
     <select id="selectAll" resultType="ChatVO">
-        SELECT TBC.ID, TBC.TBL_CHAT_TITLE, TBC.CHAT_STATUS, TBCM.CHAT_MEMBER_COUNT
+        SELECT
+        TBC.ID,
+        TBC.CHAT_TITLE,
+        TBC.CHAT_TYPE,
+        TBC.CHAT_OWNER_ID,
+        TBC.CHAT_STATUS,
+        NVL(TBCM.CHAT_MEMBER_COUNT, 0) AS CHAT_MEMBER_COUNT
         FROM TBL_CHAT TBC
-        JOIN (
-            SELECT COUNT(ID) AS CHAT_MEMBER_COUNT
-            FROM TBL_CHAT_MEMBER
+        JOIN TBL_CHAT_MEMBER TCM
+        ON TCM.CHAT_ID = TBC.ID
+        LEFT JOIN (
+        SELECT CHAT_ID, COUNT(*) AS CHAT_MEMBER_COUNT
+        FROM TBL_CHAT_MEMBER
+        GROUP BY CHAT_ID
         ) TBCM
         ON TBCM.CHAT_ID = TBC.ID
     </select>
 
-    <delete id="delete">
+    <delete id="delete" parameterType="Long">
         DELETE FROM TBL_CHAT
         WHERE ID = #{id}
     </delete>
