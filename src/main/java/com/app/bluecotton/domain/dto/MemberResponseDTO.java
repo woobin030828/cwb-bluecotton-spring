@@ -19,7 +19,10 @@ public class MemberResponseDTO implements Serializable {
     private String memberName;
     private String memberNickname;
     private String memberEmail;
+    private String memberPhone;
     private String memberAddress;
+    private String memberDetailAddress;
+    private String memberPostcode;
     private String memberPicturePath;
     private String memberPictureName;
     private String memberGender;
@@ -27,7 +30,6 @@ public class MemberResponseDTO implements Serializable {
     private Integer memberCandy;
     private String memberRank;
     private String memberProvider;
-    private String memberPhone;
 
     {
         this.setMemberPicturePath("/default");
@@ -50,5 +52,8 @@ public class MemberResponseDTO implements Serializable {
         this.memberRank = memberVO.getMemberRank();
         this.memberPhone = memberVO.getMemberPhone();
         this.memberAddress = memberVO.getMemberAddress();
+        this.memberPhone = memberVO.getMemberPhone();
+        this.memberDetailAddress = memberVO.getMemberDetailAddress();
+        this.memberPostcode = memberVO.getMemberPostcode();
     }
 }
