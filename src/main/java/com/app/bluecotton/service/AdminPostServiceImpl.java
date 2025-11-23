@@ -17,6 +17,7 @@ import java.util.List;
 public class AdminPostServiceImpl implements AdminPostService {
 
     private final AdminPostDAO adminPostDAO;
+    private final PostService postService;
 
     @Override
     public List<AdminPostListDTO> selectAdminPostList() {
@@ -30,6 +31,6 @@ public class AdminPostServiceImpl implements AdminPostService {
 
     @Override
     public void delete(Long id) {
-        adminPostDAO.delete(id);
+        postService.withdraw(id);
     }
 }

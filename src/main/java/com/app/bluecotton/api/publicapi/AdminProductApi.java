@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +26,13 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/products")
+@RequestMapping("/admin/products/*")
 public class AdminProductApi {
 
     private final AdminProductService adminProductService;
 
+    @Value("${file.upload-dir}")
+    private String uploadDirRoot;
 
     @Getter
     @Builder
@@ -51,15 +54,12 @@ public class AdminProductApi {
                 throw new IllegalArgumentException("빈 파일입니다.");
             }
 
-            String rootDir = "C:/bluecottonimage";
-
-
             String subDir = "MAIN";
             if ("SUB".equalsIgnoreCase(type)) {
                 subDir = "SUB";
             }
 
-            Path uploadDir = Paths.get(rootDir, subDir);
+            Path uploadDir = Paths.get(uploadDirRoot, subDir);
             Files.createDirectories(uploadDir);
 
             String originalName = file.getOriginalFilename();
@@ -73,11 +73,10 @@ public class AdminProductApi {
 
             file.transferTo(target.toFile());
 
-
-            String webPath = "/image/" + subDir.toLowerCase() + "/" + savedName;
+            String webDir = "/file/" + subDir + "/";
 
             ProductImageUploadResponse data = ProductImageUploadResponse.builder()
-                    .productImagePath(webPath)
+                    .productImagePath(webDir)
                     .productImageName(savedName)
                     .build();
 
@@ -89,13 +88,12 @@ public class AdminProductApi {
         }
     }
 
-
-    @PostMapping("/create")
+    @PostMapping("create")
     public ResponseEntity<ApiResponseDTO<Long>> create(
             @RequestBody AdminProductCreateRequest request
     ) {
         ProductVO productVO = request.getProduct();
-        List<ProductImageVO> images = request.getImages();  // MAIN/SUB 이미지 정보
+        List<ProductImageVO> images = request.getImages();
 
         Long id = adminProductService.createProduct(productVO, images);
 
@@ -104,15 +102,13 @@ public class AdminProductApi {
                 .body(ApiResponseDTO.of("상품 등록 성공", id));
     }
 
-
-    @GetMapping("/list")
+    @GetMapping("list")
     public ResponseEntity<ApiResponseDTO<List<ProductVO>>> list() {
         List<ProductVO> products = adminProductService.getProducts();
         return ResponseEntity.ok(ApiResponseDTO.of("상품 조회 성공", products));
     }
 
-
-    @GetMapping("/{id}")
+    @GetMapping("detail/{id}")
     public ResponseEntity<ApiResponseDTO<ProductVO>> detail(@PathVariable Long id) {
         return adminProductService.getProduct(id)
                 .map(p -> ResponseEntity.ok(ApiResponseDTO.of("상품 상세 조회 성공", p)))
@@ -121,26 +117,23 @@ public class AdminProductApi {
                         .body(ApiResponseDTO.of("상품을 찾을 수 없습니다.", null)));
     }
 
-
-    @GetMapping("/{id}/images")
+    @GetMapping("{id}/images")
     public ResponseEntity<ApiResponseDTO<List<ProductImageVO>>> images(@PathVariable Long id) {
         List<ProductImageVO> images = adminProductService.getProductImages(id);
         return ResponseEntity.ok(ApiResponseDTO.of("상품 이미지 조회 성공", images));
     }
 
-
-    @PutMapping("/update/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<ApiResponseDTO<Void>> update(
             @PathVariable Long id,
             @RequestBody ProductVO productVO
     ) {
         productVO.setId(id);
-        // 지금은 이미지 수정은 안 하고, 상품 정보만 수정
         adminProductService.updateProduct(productVO, Collections.emptyList());
         return ResponseEntity.ok(ApiResponseDTO.of("상품 수정 성공", null));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("delete/{id}")
     public ResponseEntity<ApiResponseDTO<Void>> delete(@PathVariable Long id) {
         adminProductService.deleteProduct(id);
         return ResponseEntity.ok(ApiResponseDTO.of("상품 삭제 성공", null));

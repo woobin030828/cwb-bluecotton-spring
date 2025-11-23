@@ -1,6 +1,7 @@
 package com.app.bluecotton.mapper;
 
 import com.app.bluecotton.domain.dto.ReportedCommentDTO;
+import com.app.bluecotton.domain.dto.ReportedReplyDTO;
 import com.app.bluecotton.domain.vo.post.PostCommentReportVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -10,23 +11,25 @@ import java.util.List;
 @Mapper
 public interface AdminPostCommentMapper {
 
+    void insertCommentReport(PostCommentReportVO vo);
 
-    public void insertCommentReport(PostCommentReportVO vo);
+    List<ReportedCommentDTO> selectReportedComments();
 
-
-    public List<ReportedCommentDTO> selectReportedComments();
-
-
-    public void deleteCommentLikesByCommentId(@Param("commentId") Long commentId);
-    public void deleteCommentReportsByCommentId(@Param("commentId") Long commentId);
-    public void deleteRepliesByCommentId(@Param("commentId") Long commentId);
-    public void deleteCommentByCommentId(@Param("commentId") Long commentId);
+    List<ReportedReplyDTO> selectReportedReplies();
 
 
-    public void deleteReplyById(@Param("replyId") Long replyId);
+    void deleteCommentLikesByCommentId( Long commentId);
+    void deleteCommentReportsByCommentId( Long commentId);
+    void deleteRepliesByCommentId( Long commentId);
+    void deleteCommentByCommentId(Long commentId);
 
-    public void deleteRepliesByPostId(@Param("postId") Long postId);
-    public void deleteCommentLikesByPostId(@Param("postId") Long postId);
-    public void deleteCommentReportsByPostId(@Param("postId") Long postId);
-    public void deleteCommentsByPostId(@Param("postId") Long postId);
+
+    void deleteReplyLikesByReplyId( Long replyId);
+    void deleteReplyReportsByReplyId( Long replyId);
+    void deleteReplyById( Long replyId);
+
+    void deleteRepliesByPostId( Long postId);
+    void deleteCommentLikesByPostId( Long postId);
+    void deleteCommentReportsByPostId( Long postId);
+    void deleteCommentsByPostId( Long postId);
 }

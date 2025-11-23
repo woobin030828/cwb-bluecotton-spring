@@ -21,6 +21,30 @@
         )
     </insert>
 
+    <select id="selectReportedReplies"
+            resultType="com.app.bluecotton.domain.dto.ReportedReplyDTO">
+        SELECT
+        RPR.ID                      AS id,
+        RPR.POST_REPLY_ID           AS postReplyId,
+        PR.POST_COMMENT_ID          AS postCommentId,
+        PC.POST_ID                  AS postId,
+        P.POST_TITLE                AS postTitle,
+        PR.POST_REPLY_CONTENT       AS postReplyContent,
+        RU.MEMBER_NICKNAME          AS reportedUserNickname,
+        M.MEMBER_NICKNAME           AS reporterNickname,
+        RPR.POST_REPLY_REPORT_CONTENT AS postReplyReportContent,
+        SYSDATE                     AS reportDate,
+        'pending'                   AS status
+        FROM TBL_POST_REPLY_REPORT RPR
+        JOIN TBL_POST_REPLY PR     ON RPR.POST_REPLY_ID = PR.ID
+        JOIN TBL_POST_COMMENT PC   ON PR.POST_COMMENT_ID = PC.ID
+        JOIN TBL_POST P            ON PC.POST_ID = P.ID
+        JOIN TBL_MEMBER M          ON RPR.MEMBER_ID = M.ID
+        JOIN TBL_MEMBER RU         ON PR.MEMBER_ID = RU.ID
+        ORDER BY RPR.ID DESC
+    </select>
+
+
     <select id="selectReportedComments"
             resultType="com.app.bluecotton.domain.dto.ReportedCommentDTO">
         SELECT
@@ -87,6 +111,19 @@
         DELETE FROM TBL_POST_REPLY
         WHERE ID = #{replyId}
     </delete>
+
+    <delete id="deleteReplyLikesByReplyId" parameterType="long">
+        DELETE FROM TBL_POST_REPLY_LIKE
+        WHERE POST_REPLY_ID = #{replyId}
+    </delete>
+
+    <delete id="deleteReplyReportsByReplyId" parameterType="long">
+        DELETE FROM TBL_POST_REPLY_REPORT
+        WHERE POST_REPLY_ID = #{replyId}
+    </delete>
+
+
+
 
 
 </mapper>

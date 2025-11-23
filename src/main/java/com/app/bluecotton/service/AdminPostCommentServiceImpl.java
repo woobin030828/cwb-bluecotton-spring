@@ -30,6 +30,8 @@ public class AdminPostCommentServiceImpl implements AdminPostCommentService {
 
     @Override
     public void deleteReplyAsAdmin(Long replyId) {
-        dao.deleteCommentsByPostIdCascade(replyId);
+
+        dao.deleteReplyCascade(replyId);
     }
 }
+

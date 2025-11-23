@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface AdminPostService {
 
-    List<AdminPostListDTO> selectAdminPostList();
+    public List<AdminPostListDTO> selectAdminPostList();
 
-    AdminPostDetailDTO selectPostDetail(Long id);
+    public AdminPostDetailDTO selectPostDetail(Long id);
 
-    void delete(Long id);
+    public void delete(Long id);
 }

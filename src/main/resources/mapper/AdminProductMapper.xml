@@ -21,6 +21,17 @@
         <result property="productSize" column="PRODUCT_SIZE"/>
     </resultMap>
 
+    <resultMap id="ProductImageResultMap"
+               type="com.app.bluecotton.domain.vo.shop.ProductImageVO">
+        <id property="id" column="ID"/>
+        <result property="productImagePath" column="PRODUCT_IMAGE_PATH"/>
+        <result property="productImageName" column="PRODUCT_IMAGE_NAME"/>
+        <result property="productId" column="PRODUCT_ID"/>
+        <result property="productImageType"
+                column="PRODUCT_IMAGE_TYPE"
+                javaType="com.app.bluecotton.domain.vo.shop.ProductImageType"/>
+    </resultMap>
+
     <insert id="insertProduct"
             parameterType="com.app.bluecotton.domain.vo.shop.ProductVO">
         <selectKey keyProperty="id"
@@ -115,7 +126,6 @@
         WHERE ID = #{id}
     </update>
 
-
     <delete id="deleteProduct" parameterType="long">
         DELETE FROM TBL_PRODUCT
         WHERE ID = #{id}
@@ -132,20 +142,35 @@
         ID,
         PRODUCT_IMAGE_PATH,
         PRODUCT_IMAGE_NAME,
-        PRODUCT_ID
+        PRODUCT_ID,
+        PRODUCT_IMAGE_TYPE
         ) VALUES (
         #{id},
         #{productImagePath},
         #{productImageName},
-        #{productId}
+        #{productId},
+        #{productImageType}
         )
     </insert>
 
+    <select id="selectImagesByProductId"
+            parameterType="long"
+            resultMap="ProductImageResultMap">
+        SELECT
+        ID,
+        PRODUCT_IMAGE_PATH,
+        PRODUCT_IMAGE_NAME,
+        PRODUCT_ID,
+        PRODUCT_IMAGE_TYPE
+        FROM TBL_PRODUCT_IMAGE
+        WHERE PRODUCT_ID = #{id}
+        ORDER BY ID
+    </select>
 
     <delete id="deleteImagesByProductId"
             parameterType="long">
         DELETE FROM TBL_PRODUCT_IMAGE
-        WHERE PRODUCT_ID = #{productId}
+        WHERE PRODUCT_ID = #{id}
     </delete>
 
 </mapper>

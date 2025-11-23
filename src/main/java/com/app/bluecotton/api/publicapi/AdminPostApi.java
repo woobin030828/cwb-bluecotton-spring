@@ -1,8 +1,10 @@
 package com.app.bluecotton.api.publicapi;
 
+import com.app.bluecotton.domain.dto.AdminReportedPostDTO;
 import com.app.bluecotton.domain.dto.ApiResponseDTO;
 import com.app.bluecotton.domain.dto.post.AdminPostDetailDTO;
 import com.app.bluecotton.domain.dto.post.AdminPostListDTO;
+import com.app.bluecotton.service.AdminPostReportService;
 import com.app.bluecotton.service.AdminPostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,8 @@ import java.util.List;
 public class AdminPostApi {
 
     private final AdminPostService adminPostService;
+
+    private final AdminPostReportService adminPostReportService;
 
     @GetMapping("list")
     public ResponseEntity<ApiResponseDTO<List<AdminPostListDTO>>> selectAdminPostList() {
@@ -42,5 +46,11 @@ public class AdminPostApi {
         ApiResponseDTO<Void> body =
                 new ApiResponseDTO<>("게시글 삭제 성공", null);
         return ResponseEntity.status(HttpStatus.OK).body(body);
+    }
+
+    @GetMapping("reported")
+    public ResponseEntity<ApiResponseDTO<List<AdminReportedPostDTO>>> getReportedPosts() {
+        List<AdminReportedPostDTO> list = adminPostReportService.getReportedPosts();
+        return ResponseEntity.ok(ApiResponseDTO.of("신고된 게시글 목록 조회 성공", list));
     }
 }
