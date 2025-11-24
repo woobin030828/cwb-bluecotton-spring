@@ -82,6 +82,7 @@ public class SomApi {
     @GetMapping("all")
     public ResponseEntity<ApiResponseDTO> getAllSom() {
         List<SomResponseDTO> data = somService.findAllSom();
+        log.info("data={}", data);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseDTO.of("솜 전체를 조회했습니다", data));
     }
 
@@ -100,8 +101,6 @@ public class SomApi {
         Map<String, Object> params = new HashMap<>();
         somLikeVO.setSomId(somId);
         somLikeVO.setMemberId(memberService.getMemberIdByMemberEmail(memberEmail));
-
-
         if (!isLike) {
             somService.insertSomLike(somLikeVO);
             message = "솜 좋아요가 증가했습니다!";

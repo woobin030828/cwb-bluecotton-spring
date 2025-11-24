@@ -66,31 +66,23 @@
     </select>
 
     <select id="selectSomListByCategoryAndType" parameterType="Map" resultType="SomResponseDTO">
-        SELECT TBS.ID, TBS.SOM_TITLE, TBS.SOM_CATEGORY,
-            TBS.SOM_ADDRESS, TBS.SOM_TYPE, TBS.SOM_START_DATE,
-            TBS.SOM_END_DATE, NVL(TBSL.SOM_LIKE, 0) AS SOM_LIKE_COUNT,
-            TBS.SOM_CONTENT, TBS.MEMBER_ID, NVL(TBSJ.SOM_COUNT, 0) AS SOM_COUNT,
-            TBSI.SOM_IMAGE_PATH AS SOM_TITLE_IMAGE_PATH,
-            TBSI.SOM_IMAGE_NAME AS SOM_TITLE_IMAGE_NAME
+        SELECT TBS.ID, TBS.SOM_TITLE, TBS.SOM_CATEGORY, TBS.SOM_ADDRESS, TBS.SOM_TYPE, TBS.SOM_START_DATE, TBS.SOM_END_DATE, NVL(TBSL.SOM_LIKE, 0) AS SOM_LIKE_COUNT,
+        TBS.SOM_CONTENT, TBS.MEMBER_ID, NVL(TBSJ.SOM_COUNT, 0) AS SOM_COUNT, TBSI.SOM_IMAGE_PATH AS SOM_TITLE_IMAGE_PATH, TBSI.SOM_IMAGE_NAME AS SOM_TITLE_IMAGE_NAME
         FROM TBL_SOM TBS
         LEFT JOIN (
-            SELECT SOM_ID, COUNT(ID) AS SOM_LIKE
-            FROM TBL_SOM_LIKE GROUP BY SOM_ID
+        SELECT SOM_ID, COUNT(ID) AS SOM_LIKE FROM TBL_SOM_LIKE GROUP BY SOM_ID
         ) TBSL
         ON TBS.ID = TBSL.SOM_ID
         LEFT JOIN (
-            SELECT SOM_ID, COUNT(ID) AS SOM_COUNT
-            FROM TBL_SOM_JOIN GROUP BY SOM_ID
+        SELECT SOM_ID, COUNT(ID) AS SOM_COUNT FROM TBL_SOM_JOIN GROUP BY SOM_ID
         ) TBSJ
         ON TBS.ID = TBSJ.SOM_ID
         LEFT JOIN (
-            SELECT SOM_ID, SOM_IMAGE_PATH, SOM_IMAGE_NAME
-            FROM (
-                SELECT SOM_ID, SOM_IMAGE_PATH, SOM_IMAGE_NAME,
-                ROW_NUMBER() OVER (PARTITION BY SOM_ID ORDER BY ID ASC) AS RN
-                FROM TBL_SOM_IMAGE
-            )
-            WHERE RN = 1
+        SELECT SOM_ID, SOM_IMAGE_PATH, SOM_IMAGE_NAME
+        FROM (
+        SELECT SOM_ID, SOM_IMAGE_PATH, SOM_IMAGE_NAME, ROW_NUMBER() OVER (PARTITION BY SOM_ID ORDER BY ID ASC) AS RN FROM TBL_SOM_IMAGE
+        )
+        WHERE RN = 1
         ) TBSI
         ON TBS.ID = TBSI.SOM_ID
         <where>
@@ -223,12 +215,23 @@
         WHERE SOM_ID = #{somId} AND MEMBER_ID = #{memberId}
     </delete>
 
+    <delete id="deleteSomJoinById" parameterType="Long">
+        DELETE FROM TBL_SOM_JOIN
+        WHERE ID = #{id}
+    </delete>
+
     <insert id="insertSomLike" parameterType="SomLikeVO">
         INSERT INTO TBL_SOM_LIKE VALUES (SEQ_SOM_LIKE.NEXTVAL, #{somId}, #{memberId})
     </insert>
 
     <select id="selectSomLikeCount" parameterType="Long" resultType="Integer">
         SELECT COUNT(ID)
+        FROM TBL_SOM_LIKE
+        WHERE SOM_ID = #{somId}
+    </select>
+
+    <select id="selectSomLikeList" parameterType="Long" resultType="SomLikeVO">
+        SELECT ID, SOM_ID, MEMBER_ID
         FROM TBL_SOM_LIKE
         WHERE SOM_ID = #{somId}
     </select>
@@ -244,9 +247,14 @@
 
     </select>
 
-    <delete id="deleteSomLike" parameterType="SomVO">
+    <delete id="deleteSomLike" parameterType="SomLikeVO">
         DELETE TBL_SOM_LIKE
         WHERE SOM_ID = #{somId} AND MEMBER_ID = #{memberId}
+    </delete>
+
+    <delete id="deleteSomLikeById" parameterType="Long">
+        DELETE TBL_SOM_LIKE
+        WHERE ID = #{somId}
     </delete>
 
     <resultMap id="SomCheckWithImagesMap" type="com.app.bluecotton.domain.dto.SomCheckResponseDTO">
